@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -13,11 +13,78 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  username     String   @unique
-  passwordHash String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+enum TipoUsuario{
+  publico
+  privado
+}
+
+model Usuario {
+id String @id @default(uuid()) @map("id_usuario") 
+  correo       String   @unique @db.VarChar(254)
+  username     String   @unique @db.VarChar(30)
+  nombre       String   @db.VarChar(80)
+  hash String   @db.VarChar(255)
+  salt String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")  
+  descripcion  String?  @db.VarChar(280)
+  deletedAt DateTime? @map("deleted_at")
+  tipo TipoUsuario @default(publico)
+  publicaciones Publicacion[]
+  comentarios Comentario[]
+  likesPublicaciones   LikesPublicacion[]
+
+   @@map("usuarios")
+}
+
+
+model Publicacion {
+  id        String   @id @default(uuid()) @map("id_publicacion")
+  usuarioId String   @map("id_usuario")  
+  contenido String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  usuario     Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  comentarios Comentario[]
+  likes       LikesPublicacion[]
+  
+  @@index([usuarioId])  
+  @@map("publicaciones")
+}
+
+model Comentario{
+  id String @id @default(uuid()) @map("id_comentario")
+  contenido String   @db.Text
+  usuarioId String   @map("id_usuario")
+  createdAt DateTime @default(now()) @map("created_at")
+  publicacionId String @map("id_publicacion")
+  comentarioPadreId String? @map("id_comentario_padre")
+
+  publicacion Publicacion @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+// Auto-relación: comentario padre e hijos
+  padre      Comentario?  @relation("RespuestasComentario", fields: [comentarioPadreId], references: [id], onDelete: Cascade)
+  respuestas Comentario[] @relation("RespuestasComentario")
+
+
+  @@index([publicacionId])
+  @@index([usuarioId])
+  @@index([comentarioPadreId])
+  @@map("comentarios")
+}
+
+model LikesPublicacion{
+  usuarioId String @map("id_usuario")
+  publicacionId String @map("id_publicacion")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  publicacion Publicacion @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, publicacionId])
+   @@index([publicacionId])  
+  @@map("likes_publicacion")
+
 }
