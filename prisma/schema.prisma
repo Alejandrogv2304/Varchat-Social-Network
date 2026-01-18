@@ -18,6 +18,12 @@ enum TipoUsuario{
   privado
 }
 
+enum EstadoSolicitud{
+  pendiente
+  aceptado
+  rechazado
+}
+
 model Usuario {
 id String @id @default(uuid()) @map("id_usuario") 
   correo       String   @unique @db.VarChar(254)
@@ -32,6 +38,15 @@ id String @id @default(uuid()) @map("id_usuario")
   publicaciones Publicacion[]
   comentarios Comentario[]
   likesPublicaciones   LikesPublicacion[]
+  likesComentarios   LikesComentario[]
+  mensajes  Mensaje[]
+
+  amigosComoUsuario1   Amigos[] @relation("AmigosDe")
+  amigosComoUsuario2   Amigos[] @relation("AmigosA")
+  solicitudesEnviadas  Amigos[] @relation("SolicitudesEnviadas")
+  
+  chatsComoUsuario1    Chat[] @relation("ChatUsuario1")
+  chatsComoUsuario2    Chat[] @relation("ChatUsuario2")
 
    @@map("usuarios")
 }
@@ -58,6 +73,7 @@ model Comentario{
   createdAt DateTime @default(now()) @map("created_at")
   publicacionId String @map("id_publicacion")
   comentarioPadreId String? @map("id_comentario_padre")
+  likes       LikesComentario[]
 
   publicacion Publicacion @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
 
@@ -84,7 +100,74 @@ model LikesPublicacion{
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@id([usuarioId, publicacionId])
-   @@index([publicacionId])  
+  @@index([publicacionId])  
   @@map("likes_publicacion")
 
+}
+
+model LikesComentario{
+  usuarioId String @map("id_usuario")
+  comentarioId String @map("id_comentario")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  comentario Comentario @relation(fields: [comentarioId], references: [id], onDelete: Cascade)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, comentarioId])
+  @@index([comentarioId])  
+  @@map("likes_comentario")
+
+}
+
+model Amigos{
+usuarioId1 String @map("id_usuario_1")
+usuarioId2 String @map("id_usuario_2")
+solicitadoPor String @map("solicitado_por")
+estado EstadoSolicitud @default(pendiente)
+createdAt DateTime @default(now()) @map("created_at")
+respondidoAt DateTime? @map("respondido_at")
+
+  usuario1   Usuario @relation("AmigosDe", fields: [usuarioId1], references: [id], onDelete: Cascade)
+  usuario2   Usuario @relation("AmigosA", fields: [usuarioId2], references: [id], onDelete: Cascade)
+  solicitante Usuario @relation("SolicitudesEnviadas", fields: [solicitadoPor], references: [id], onDelete: Cascade)
+  
+  @@id([usuarioId1, usuarioId2])
+  @@index([usuarioId1])
+  @@index([usuarioId2])
+  @@index([estado])
+  @@map("amigos")
+}
+
+
+model Chat {
+  id             String   @id @default(uuid()) @map("id_chat")
+  usuarioId1     String   @map("id_usuario_1")
+  usuarioId2     String   @map("id_usuario_2")
+  createdAt      DateTime @default(now()) @map("created_at")
+  
+  usuario1 Usuario @relation("ChatUsuario1", fields: [usuarioId1], references: [id], onDelete: Cascade)
+  usuario2 Usuario @relation("ChatUsuario2", fields: [usuarioId2], references: [id], onDelete: Cascade)
+  mensajes Mensaje[]
+  
+  @@unique([usuarioId1, usuarioId2])
+  @@index([usuarioId1])
+  @@index([usuarioId2])
+  @@map("chats")
+}
+
+model Mensaje{
+  id             String   @id @default(uuid()) @map("id_mensaje")
+  chatId String @map("id_chat")
+  usuarioId String @map("id_usuario")
+  contenido String   @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([chatId])
+  @@index([usuarioId])
+  @@index([createdAt])
+  @@map("mensajes")
 }
