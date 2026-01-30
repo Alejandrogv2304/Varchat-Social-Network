@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
+import { AppController } from '../src/infrastructure/controllers/app.controller';
+import { UserController } from './infrastructure/controllers/user.controller';
+import { CreateUserUseCase } from './application/use-cases/create-user.usecase';
+import { AppService } from './infrastructure/services/app.service';
+import { PrismaModule } from './infrastructure/prisma/prisma.module';
+import { PrismaUserRepository } from './infrastructure/prisma/user.repository.impl';
 
 @Module({
   imports: [
@@ -11,7 +14,7 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
     PrismaModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, UserController],
+  providers: [AppService, PrismaUserRepository, CreateUserUseCase],
 })
 export class AppModule {}

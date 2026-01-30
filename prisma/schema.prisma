@@ -25,7 +25,7 @@ enum EstadoSolicitud{
 }
 
 model Usuario {
-id String @id @default(uuid()) @map("id_usuario") 
+ id String @id @default(uuid()) @map("id_usuario") 
   correo       String   @unique @db.VarChar(254)
   username     String   @unique @db.VarChar(30)
   nombre       String   @db.VarChar(80)
