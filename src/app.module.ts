@@ -6,15 +6,21 @@ import { CreateUserUseCase } from './application/use-cases/create-user.usecase';
 import { AppService } from './infrastructure/services/app.service';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { PrismaUserRepository } from './infrastructure/prisma/user.repository.impl';
+import { USER_REPOSITORY } from './application/tokens/tokens';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
   ],
   controllers: [AppController, UserController],
-  providers: [AppService, PrismaUserRepository, CreateUserUseCase],
+  providers: [
+    AppService,
+    CreateUserUseCase,
+    {
+      provide: USER_REPOSITORY,
+      useClass: PrismaUserRepository,
+    },
+  ],
 })
 export class AppModule {}

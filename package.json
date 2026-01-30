@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "postbuild": "xcopy /E /I /Y generated dist\\generated >nul 2>nul || exit 0",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
@@ -30,6 +31,7 @@
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.2.0",
     "bcrypt": "^6.0.0",
     "bull": "^4.16.5",
@@ -37,6 +39,7 @@
     "class-validator": "^0.14.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pg": "^8.17.2",
     "redis": "^5.10.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"

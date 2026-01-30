@@ -3,6 +3,7 @@ import { User, UserType } from '../../domain/entities/user.entity';
 import type { UserRepository } from '../../domain/repositories/user.repository';
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { USER_REPOSITORY } from '../tokens/tokens';
 
 export interface CreateUserInput {
   correo: string;
@@ -17,9 +18,7 @@ export interface CreateUserInput {
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(
-    @Inject('UserRepository') private readonly userRepository: UserRepository
-  ) {}
+  constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
 
   async execute(input: CreateUserInput): Promise<UserPublicData> {
 

@@ -9,9 +9,7 @@ import { UserPublicData } from 'src/domain/dto/user-public-data.dto';
 export class PrismaUserRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(user: User): Promise<User> {
-
-   
+  async createUser(user: User): Promise<UserPublicData> {
     const created = await this.prisma.usuario.create({
       data: {
         correo: user.correo,
@@ -23,18 +21,14 @@ export class PrismaUserRepository implements UserRepository {
         descripcion: user.descripcion ,
       },
     });
-    return new User(
-      created.id,
-      created.correo,
-      created.username,
-      created.nombre,
-      created.hash,
-      created.salt,
-      created.tipo as UserType,
-      created.descripcion ?? undefined,
-      created.createdAt,
-      created.deletedAt ?? undefined,
-    );
+    return {
+      id: created.id,
+      correo: created.correo,
+      username: created.username,
+      nombre: created.nombre,
+      tipo: created.tipo as UserType,
+      descripcion: created.descripcion ?? undefined
+    };
   }
   
   async findByEmail(email: string): Promise<UserPublicData | null> {
