@@ -51,4 +51,20 @@ async findByUsername(username: string): Promise<boolean | null> {
   return true;
 }
 
+
+ async findByEmailForAuth(email: string): Promise<User | null> {
+  const found = await this.prisma.usuario.findUnique({ where: { correo: email } });
+  if (!found) return null;
+  return {
+    id: found.id,
+    correo: found.correo,
+    username: found.username,
+    nombre: found.nombre,
+    tipo: found.tipo as UserType,
+    descripcion: found.descripcion ?? undefined,
+    hash: found.hash,
+    salt: found.salt
+  }
+}
+
 }
