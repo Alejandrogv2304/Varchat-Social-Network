@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { AuthRepository } from 'src/domain/repositories/auth.repository';
 
-import { LoginResponseDto } from 'src/domain/dto/login-response.dto';
+import { LoginResponseDto } from 'src/domain/dto/login/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
-import { UserPublicData } from 'src/domain/dto/user-public-data.dto';
+import { UserPublicData } from 'src/domain/dto/users/user-public-data.dto';
 
 @Injectable()
 export class AuthRepositoryImpl implements AuthRepository {

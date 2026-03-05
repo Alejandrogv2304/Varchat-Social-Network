@@ -13,6 +13,7 @@ import { LoginUseCase } from './application/use-cases/login.usecase';
 import { ValidateUserUseCase } from './application/use-cases/validateUser.usecase';
 import { JwtModule } from '@nestjs/jwt';
 import { GetUserProfileUseCase } from './application/use-cases/get-user-profile.usecase';
+import { GetUserByUsername } from './application/use-cases/get-user-by-username';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { GetUserProfileUseCase } from './application/use-cases/get-user-profile.
     LoginUseCase,
     ValidateUserUseCase,
     GetUserProfileUseCase,
+    GetUserByUsername,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,

@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AUTH_REPOSITORY } from '../tokens/tokens';
 import type { AuthRepository } from 'src/domain/repositories/auth.repository';
-import { UserPublicData } from 'src/domain/dto/user-public-data.dto';
-import { LoginResponseDto } from 'src/domain/dto/login-response.dto';
+import { UserPublicData } from 'src/domain/dto/users/user-public-data.dto';
+import { LoginResponseDto } from 'src/domain/dto/login/login-response.dto';
 
 
 @Injectable()

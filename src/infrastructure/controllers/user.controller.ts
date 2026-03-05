@@ -4,13 +4,15 @@ import { CreateUserDto } from '../../interfaces/dtos/create-user.dto';
 import { CreateUserUseCase } from '../../application/use-cases/create-user.usecase';
 import { UserType } from '../../domain/entities/user.entity';
 import { GetUserProfileUseCase } from '../../application/use-cases/get-user-profile.usecase';
+import { GetUserByUsername } from '../../application/use-cases/get-user-by-username';
 
 
 @Controller('users')
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
-    private readonly getUserProfileUseCase: GetUserProfileUseCase
+    private readonly getUserProfileUseCase: GetUserProfileUseCase,
+    private readonly getUserByUsername: GetUserByUsername
   ) {}
 
   @Post()
@@ -29,5 +31,10 @@ export class UserController {
   @Get(':id')
   async getProfileUser(@Param('id') id:string){
     return this.getUserProfileUseCase.execute(id);
+  }
+
+  @Get('exists/:username')
+  async checkUserExists(@Param('username') username: string) {
+    return this.getUserByUsername.execute(username);
   }
 }

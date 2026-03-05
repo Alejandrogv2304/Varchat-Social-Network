@@ -1,4 +1,4 @@
-import { UserPublicData } from 'src/domain/dto/user-public-data.dto';
+import { UserPublicData } from 'src/domain/dto/users/user-public-data.dto';
 import { User, UserType } from '../../domain/entities/user.entity';
 import type { UserRepository } from '../../domain/repositories/user.repository';
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';

@@ -1,6 +1,6 @@
-import { LoginResponseDto } from "../dto/login-response.dto";
-import { LoginDto } from "../dto/login.dto";
-import { UserPublicData } from "../dto/user-public-data.dto";
+import { LoginResponseDto } from "../dto/login/login-response.dto";
+import { LoginDto } from "../dto/login/login.dto";
+import { UserPublicData } from "../dto/users/user-public-data.dto";
 import { User } from "../entities/user.entity";
 
 

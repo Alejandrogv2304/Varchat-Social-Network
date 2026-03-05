@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { User, UserType } from '../../domain/entities/user.entity';
 import { UserRepository } from '../../domain/repositories/user.repository';
-import { UserPublicData } from 'src/domain/dto/user-public-data.dto';
+import { UserPublicData } from 'src/domain/dto/users/user-public-data.dto';
+import { CheckUsernameDto } from 'src/domain/dto/users/check-username.dto';
 
 
 @Injectable()
@@ -45,10 +46,18 @@ export class PrismaUserRepository implements UserRepository {
 }
 
 
-async findByUsername(username: string): Promise<boolean | null> {
+async findByUsername(username: string): Promise<CheckUsernameDto> {
   const found = await this.prisma.usuario.findUnique({ where: { username } });
-  if (!found) return null;
-  return true;
+  if (!found) {
+    return{
+      exists: false,
+      available: true
+    }
+  }
+  return {
+    exists: true,
+    available: false
+  };
 }
 
 

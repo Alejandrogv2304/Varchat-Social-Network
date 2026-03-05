@@ -1,9 +1,9 @@
 import { BadRequestException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { USER_REPOSITORY } from "../tokens/tokens";
 import type { UserRepository } from "src/domain/repositories/user.repository";
-import { LoginDto } from "src/domain/dto/login.dto";
+import { LoginDto } from "src/domain/dto/login/login.dto";
 import * as bcrypt from 'bcrypt';
-import { UserPublicData } from "src/domain/dto/user-public-data.dto";
+import { UserPublicData } from "src/domain/dto/users/user-public-data.dto";
 
 
 @Injectable()

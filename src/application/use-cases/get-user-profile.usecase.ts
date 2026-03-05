@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { USER_REPOSITORY } from '../tokens/tokens';
 import type { UserRepository } from '../../domain/repositories/user.repository';
-import type { UserPublicData } from '../../domain/dto/user-public-data.dto';
+import type { UserPublicData } from '../../domain/dto/users/user-public-data.dto';
 
 
 @Injectable()
