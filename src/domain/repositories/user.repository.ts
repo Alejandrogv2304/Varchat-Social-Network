@@ -7,4 +7,5 @@ export interface UserRepository{
     findByEmail(correo:string): Promise<UserPublicData | null>;
     findByUsername(username:string): Promise<boolean | null>;
     findByEmailForAuth(correo:string): Promise<User | null>;
+    findById(id:string):Promise<UserPublicData | null>;
 }

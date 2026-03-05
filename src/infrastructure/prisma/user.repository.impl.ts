@@ -67,4 +67,17 @@ async findByUsername(username: string): Promise<boolean | null> {
   }
 }
 
+async findById(id:string): Promise<UserPublicData | null>{
+  const found = await this.prisma.usuario.findUnique({ where:{id: id}})
+  if(!found) return null;
+  return {
+    id: found.id,
+    correo: found.correo,
+    username: found.username,
+    nombre: found.nombre,
+    tipo: found.tipo as UserType,
+    descripcion: found.descripcion ?? undefined
+  }
+}
+
 }
