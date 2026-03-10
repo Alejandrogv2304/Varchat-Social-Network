@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { User, UserType } from '../../domain/entities/user.entity';
 import { UserRepository } from '../../domain/repositories/user.repository';
 import { UserPublicData } from 'src/domain/dto/users/user-public-data.dto';
 import { CheckUsernameDto } from 'src/domain/dto/users/check-username.dto';
+import { UpdateUserProfileDto } from 'src/interfaces/dtos/updated-user-profile.dto';
 
 
 @Injectable()
@@ -89,4 +90,44 @@ async findById(id:string): Promise<UserPublicData | null>{
   }
 }
 
+
+
+
+async updateUserById(id: string, userData: UpdateUserProfileDto ): Promise<UserPublicData> {
+  const found = await this.prisma.usuario.findUnique({ where: { id } });
+  if (!found) throw new NotFoundException('Usuario no encontrado');
+
+  // Filtrar campos permitidos
+  const allowedFields = ['nombre', 'descripcion', 'tipo', 'username', 'correo'];
+  const dataToUpdate: any = {};
+  for (const key of allowedFields) {
+    if (userData[key] !== undefined) dataToUpdate[key] = userData[key];
+  }
+
+  // Validar username
+  if (dataToUpdate.username) {
+    const usernameExists = await this.prisma.usuario.findUnique({ where: { username: dataToUpdate.username } });
+    if (usernameExists && usernameExists.id !== id) throw new ConflictException('El nombre de usuario ya está en uso');
+  }
+
+  // Validar correo
+  if (dataToUpdate.correo) {
+    const emailExists = await this.prisma.usuario.findUnique({ where: { correo: dataToUpdate.correo } });
+    if (emailExists && emailExists.id !== id) throw new ConflictException('El correo electrónico ya está en uso');
+  }
+
+  const updated = await this.prisma.usuario.update({
+    where: { id },
+    data: dataToUpdate
+  });
+
+  return {
+    id: updated.id,
+    correo: updated.correo,
+    username: updated.username,
+    nombre: updated.nombre,
+    tipo: updated.tipo as UserType,
+    descripcion: updated.descripcion ?? undefined
+  };
+}
 }

@@ -8,3 +8,4 @@ export interface UserPublicData {
   tipo: UserType;
   descripcion?: string ;
 }
+

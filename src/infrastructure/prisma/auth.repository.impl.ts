@@ -4,6 +4,7 @@ import { AuthRepository } from 'src/domain/repositories/auth.repository';
 import { LoginResponseDto } from 'src/domain/dto/login/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserPublicData } from 'src/domain/dto/users/user-public-data.dto';
+import { JwtPayload } from '../guards/jwt-payload.interface';
 
 @Injectable()
 export class AuthRepositoryImpl implements AuthRepository {
@@ -16,10 +17,11 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async login(user: UserPublicData): Promise<LoginResponseDto> {
     // Payload para el access token
-    const payload = {
-      id: user.id,
+    const payload:JwtPayload = {
+      sub: user.id,
       correo: user.correo,
       username: user.username,
+      nombre: user.nombre,
     };
     // Generar access token
     const access_token = await this.jwtService.signAsync(payload, {
@@ -28,7 +30,7 @@ export class AuthRepositoryImpl implements AuthRepository {
     // Generar refresh token
     const refresh_token = await this.jwtService.signAsync(
       { sub: user.id },
-      { expiresIn: '7d' }
+      { expiresIn: '2d' }
     );
     return {
       access_token,

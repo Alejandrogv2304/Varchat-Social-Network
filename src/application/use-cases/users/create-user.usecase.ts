@@ -1,9 +1,9 @@
 import { UserPublicData } from 'src/domain/dto/users/user-public-data.dto';
-import { User, UserType } from '../../domain/entities/user.entity';
-import type { UserRepository } from '../../domain/repositories/user.repository';
+import { User, UserType } from '../../../domain/entities/user.entity';
+import type { UserRepository } from '../../../domain/repositories/user.repository';
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { USER_REPOSITORY } from '../tokens/tokens';
+import { USER_REPOSITORY } from '../../tokens/tokens';
 
 export interface CreateUserInput {
   correo: string;

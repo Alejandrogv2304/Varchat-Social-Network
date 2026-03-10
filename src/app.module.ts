@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from '../src/infrastructure/controllers/app.controller';
 import { UserController } from './infrastructure/controllers/user.controller';
-import { CreateUserUseCase } from './application/use-cases/create-user.usecase';
+import { CreateUserUseCase } from './application/use-cases/users/create-user.usecase';
 import { AppService } from './infrastructure/services/app.service';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { PrismaUserRepository } from './infrastructure/prisma/user.repository.impl';
@@ -12,8 +12,9 @@ import { AuthRepositoryImpl } from './infrastructure/prisma/auth.repository.impl
 import { LoginUseCase } from './application/use-cases/login.usecase';
 import { ValidateUserUseCase } from './application/use-cases/validateUser.usecase';
 import { JwtModule } from '@nestjs/jwt';
-import { GetUserProfileUseCase } from './application/use-cases/get-user-profile.usecase';
-import { GetUserByUsername } from './application/use-cases/get-user-by-username';
+import { GetUserProfileUseCase } from './application/use-cases/users/get-user-profile.usecase';
+import { GetUserByUsername } from './application/use-cases/users/get-user-by-username';
+import { UpdatedUserByIdUseCase } from './application/use-cases/users/update-user-by-id.usecase';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { GetUserByUsername } from './application/use-cases/get-user-by-username'
     ValidateUserUseCase,
     GetUserProfileUseCase,
     GetUserByUsername,
+    UpdatedUserByIdUseCase,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,
