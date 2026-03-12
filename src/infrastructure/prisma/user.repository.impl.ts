@@ -64,6 +64,7 @@ async findByUsername(username: string): Promise<CheckUsernameDto> {
 
  async findByEmailForAuth(email: string): Promise<User | null> {
   const found = await this.prisma.usuario.findUnique({ where: { correo: email } });
+  if(found?.deletedAt !== null) throw new ConflictException('La cuenta está desactivada');
   if (!found) return null;
   return {
     id: found.id,
@@ -128,6 +129,19 @@ async updateUserById(id: string, userData: UpdateUserProfileDto ): Promise<UserP
     nombre: updated.nombre,
     tipo: updated.tipo as UserType,
     descripcion: updated.descripcion ?? undefined
+  };
+}
+
+async inactivateUserById(id: string): Promise<{ message: string }> {
+  const found = await this.prisma.usuario.findUnique({ where: { id } });
+  if (!found) throw new NotFoundException('Usuario no encontrado');
+  if(found.deletedAt !== null) throw new ConflictException('La cuenta ya está desactivada');
+  await this.prisma.usuario.update({
+    where: { id },
+    data: { deletedAt: new Date() }
+  });
+  return {
+    message: 'Cuenta desactivada exitosamente'
   };
 }
 }

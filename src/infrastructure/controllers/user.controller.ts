@@ -8,6 +8,7 @@ import { GetUserByUsername } from '../../application/use-cases/users/get-user-by
 import { UpdatedUserByIdUseCase } from '../../application/use-cases/users/update-user-by-id.usecase';
 import { JwtAuthGuard } from '../guards/jwt.guard';
 import { UpdateUserProfileDto } from 'src/interfaces/dtos/updated-user-profile.dto';
+import { InactivateUserByIdUseCase } from 'src/application/use-cases/users/inactivate-user-by-id.usecase';
 
 
 @Controller('users')
@@ -16,20 +17,14 @@ export class UserController {
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly getUserProfileUseCase: GetUserProfileUseCase,
     private readonly getUserByUsername: GetUserByUsername,
-    private readonly updatedUserById: UpdatedUserByIdUseCase
+    private readonly updatedUserById: UpdatedUserByIdUseCase,
+    private readonly inactivateUserById: InactivateUserByIdUseCase,
   ) {}
 
   @Post()
   async create(@Body() dto: CreateUserDto) {
     
-    return this.createUserUseCase.execute({
-      correo: dto.correo,
-      username: dto.username,
-      nombre: dto.nombre,
-      password: dto.password,
-      tipo: dto.tipo ? (dto.tipo as UserType) : UserType.PUBLICO,
-      descripcion: dto.descripcion,
-    });
+    return this.createUserUseCase.execute(dto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -49,5 +44,12 @@ export class UserController {
   async updatedUserId(@Body() dto: UpdateUserProfileDto, @Request() req){
   const userId = req.user.sub;
   return this.updatedUserById.execute(userId, dto);
+  }
+
+  @Patch('/inactivate')
+  @UseGuards(JwtAuthGuard)
+  async inactivateUser(@Request() req){
+  const userId = req.user.sub;
+  return this.inactivateUserById.execute(userId);
   }
 }

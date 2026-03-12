@@ -15,6 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { GetUserProfileUseCase } from './application/use-cases/users/get-user-profile.usecase';
 import { GetUserByUsername } from './application/use-cases/users/get-user-by-username';
 import { UpdatedUserByIdUseCase } from './application/use-cases/users/update-user-by-id.usecase';
+import { InactivateUserByIdUseCase } from './application/use-cases/users/inactivate-user-by-id.usecase';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UpdatedUserByIdUseCase } from './application/use-cases/users/update-use
     GetUserProfileUseCase,
     GetUserByUsername,
     UpdatedUserByIdUseCase,
+    InactivateUserByIdUseCase,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,

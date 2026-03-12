@@ -4,15 +4,8 @@ import type { UserRepository } from '../../../domain/repositories/user.repositor
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { USER_REPOSITORY } from '../../tokens/tokens';
+import { CreateUserDto } from 'src/interfaces/dtos/create-user.dto';
 
-export interface CreateUserInput {
-  correo: string;
-  username: string;
-  nombre: string;
-  password:string;
-  tipo?: UserType;
-  descripcion?: string;
-}
 
 
 
@@ -20,7 +13,7 @@ export interface CreateUserInput {
 export class CreateUserUseCase {
   constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
 
-  async execute(input: CreateUserInput): Promise<UserPublicData> {
+  async execute(input: CreateUserDto): Promise<UserPublicData> {
 
       // Validar correo
      const existingByEmail = await this.userRepository.findByEmail(input.correo);
@@ -44,7 +37,7 @@ export class CreateUserUseCase {
       input.nombre,
       hash,
       salt,
-      input.tipo ?? UserType.PUBLICO,
+      input.tipo ? (input.tipo as UserType) : UserType.PUBLICO,
       input.descripcion,
     );
     return this.userRepository.createUser(user);

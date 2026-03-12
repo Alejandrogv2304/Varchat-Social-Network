@@ -11,5 +11,6 @@ export interface UserRepository{
     findByEmailForAuth(correo:string): Promise<User | null>;
     findById(id:string):Promise<UserPublicData | null>;
     updateUserById(id:string, userData: UpdateUserProfileDto): Promise<UserPublicData>;
+    inactivateUserById(id:string): Promise<{message:string}>;
 
 }

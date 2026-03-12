@@ -1,4 +1,5 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { UserType } from 'src/domain/entities/user.entity';
 
 export class CreateUserDto {
   @IsString()
@@ -17,6 +18,7 @@ export class CreateUserDto {
   @IsString()
   descripcion?: string;
 
-  @IsString()
-  tipo: string;
+  @IsOptional()
+  @IsEnum(UserType,{message:'El tipo debe ser público o privado'})
+  tipo?: string;
 }
