@@ -7,4 +7,5 @@ import { User } from "../entities/user.entity";
 export interface AuthRepository{
     validateUser (loginInfo: LoginDto): Promise<UserPublicData | null>;
     login(user: UserPublicData): Promise<LoginResponseDto>;
+    refreshToken(token:string): Promise<{access_token:string}>;
 }

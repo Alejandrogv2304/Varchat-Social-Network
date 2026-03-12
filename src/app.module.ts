@@ -16,6 +16,7 @@ import { GetUserProfileUseCase } from './application/use-cases/users/get-user-pr
 import { GetUserByUsername } from './application/use-cases/users/get-user-by-username';
 import { UpdatedUserByIdUseCase } from './application/use-cases/users/update-user-by-id.usecase';
 import { InactivateUserByIdUseCase } from './application/use-cases/users/inactivate-user-by-id.usecase';
+import { RefreshTokenUseCase } from './application/use-cases/refresh-token.usecase';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { InactivateUserByIdUseCase } from './application/use-cases/users/inactiv
     AppService,
     CreateUserUseCase,
     LoginUseCase,
+    RefreshTokenUseCase,
     ValidateUserUseCase,
     GetUserProfileUseCase,
     GetUserByUsername,
